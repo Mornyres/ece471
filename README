@@ -1,0 +1,18 @@
+Name: Forest LeBlanc
+
+Answers to homework questions in Part7:
+
+A.
+Run `man ls` for detailed usage and option descriptions, or `ls --help` for a more basic guide
+ 
+B.
+`ls -a` denotes the "all" option, so that hidden files (e.g., ones beginning with `.`) are shown
+
+C. 
+Linux is cheap, both in terms of resources and in money, to implement in an embedded system, and the source code is openly available such that it can be configured to suit any particular application.
+
+D.
+I'm using SSH from Windows with a program called MobaXTerm. The Pi is headless and is configured to upload its IP to dweet.io on startup via the program nomohead:
+https://github.com/hrishioa/nomohead/
+
+This way you don't have to email it to yourself and put an email password right in a file, as many people do.
