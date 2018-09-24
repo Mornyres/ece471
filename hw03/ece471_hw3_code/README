@@ -1,0 +1,42 @@
+ECE 471 Fall 2018 -- Homework 3
+
+Names of Group Members:
+Forest LeBlanc
+
+Answer to Question #3a:
+
+#1
+        add	r10,r10,#10	@ Offset buffer address by 10
+
+#2
+	add	r8,r8,#0x30	@ Add 0x30 (which is ASCII 0  here) to the remainder of divide_by_10, which is stored in r8
+
+
+Describe your something cool:
+
+Answer to Question #7:
+
+a.b.c.
+
+		using `strip` and `ls -lhS`:
+		-rwxr-xr-x 1 pi pi  632 Sep 23 21:16 hello_world
+		-rwxr-xr-x 1 pi pi  608 Sep 23 21:16 hello_world.thumb2
+		-rwxr-xr-x 1 pi pi  604 Sep 23 21:16 hello_world.thumb
+
+		-rwxr-xr-x 1 pi pi 5.5K Sep 23 21:23 ../../hw02/hello_world
+
+	The C implementation was 5.5KB while the unified ARM executable was 632B. This, clearly, is a huge difference and favors Assembly for space-constrained systems.
+
+
+d.	The C code was absurdly easier to write. 
+
+Answer to Question #8a:
+	
+	`man cal | grep 1752 -C 5` reveals that
+             "If not specified, ncal ... falls back to September 2,
+             1752.  This was when Great Britain and her colonies switched to the
+             Gregorian Calendar."
+	
+	This quirk also (supposedly) inspired Ursula Le Guin's sci-fi novel The Lathe of Heaven.
+	
+
