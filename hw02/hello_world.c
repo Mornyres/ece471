@@ -17,5 +17,9 @@ int main(int argc, char **argv) {
 	for (line=0; line<maxline;	line++){
 		printf("#%d: ECE 471 HELLO\r\n",line);
 	}
+
+	if ((line=5)==5){
+		printf("Pass\n");
+	}
 	return 0;
 }

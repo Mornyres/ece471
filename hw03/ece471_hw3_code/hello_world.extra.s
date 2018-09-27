@@ -1,32 +1,57 @@
 .syntax unified
 
 @ Syscall Definitions
-.equ SYSCALL_EXIT,     1
-.equ SYSCALL_WRITE,    4
+.equ SYSCALL_EXIT,	1
+.equ SYSCALL_WRITE,	4
+.equ SWI_WrBytes,	0x69
+.equ SWI_RdBytes,	0x6A
 
 @ Other Definitions
-.equ STDOUT,	       1
+.equ STDOUT,	1
+.equ STDIN,	0
+.equ buflen,	10
+
 
         .globl _start
 _start:
 
-	mov	r0,#0
+	
+	@==========================================
+	@ Something cool first attempt: getting STDIN input line num argument
+	@                                  
+	@==========================================
+
+	/*
+	If it were to work, this is how:
+		It formats a template string, calls a STDIN syscall which accepts characters up to some delimiter and stores it in the template string. I think you would need to manually convert the received chars to an int. This gets passed to the loop section as the line number argument.
+
+	add r1, =inputbuffer
+	mov r2, r1, #buflen
+
 getinput:
-	ldr	r1,=inputprompt		@ load message
-	bl	print_string		@ print it
+	swi SWI_RdBytes
+	strb r0, [r1], #1
+	cmp r1, r2
+	blo getinput
+	cmp r0, #'.'
+	bne getinput
 
-	ldr r0, =inputformat
-	ldr r1, =inputvalue
-		
-
+	mov r0,STDOUT
+	adr r1, =inputbuffer
+	mov r2,#2
+	swi SWI_WrBytes	
+	
+	*/
+	
 	@==========================================
-	@ Your code for part 3d goes here =\
-	@                                  \/
+	@ Something cool 2nd attempt: descending line numbers
+	@                                  
 	@==========================================
+	mov	r6,#15	@ starting instead at 15 for descent
 printloop:
 	mov r0, r6	@ move current line to r0
-	cmp r0, #15	@ continue if and only if fewer than 15 lines have been printed
-	bgt exit
+	cmp r0, #0	@ continue if and only if fewer than 15 lines have been printed
+	blt exit	@ this becomes less than to break if line 0 is reached
 
 	@==========================================
 
@@ -36,28 +61,28 @@ printloop:
 	bl	print_string		@ print it
 
 	@==========================================
-	@ Your Code for part 3d Also goes Here  =\
+	@ your code for part 3d also goes here  =\
 	@                                        \/
 	@==========================================
-	add r6,r6, #1	@increment current line number
+	sub r6,r6, #1	@increment current line number
 	b printloop
 	@==========================================
 
 
 
         @================================
-        @ Exit
+        @ exit
         @================================
 exit:
-	mov	r0,#0			@ Return a zero
-        mov	r7,#SYSCALL_EXIT	@
-        swi	0x0			@ Run the system call
+	mov	r0,#0			@ return a zero
+        mov	r7,#SYSCALL_EXIT
+        swi	0x0			@ run the system call
 
 
 	@====================
 	@ print_string
 	@====================
-	@ Null-terminated string to print pointed to by r1
+	@ null-terminated string to print pointed to by r1
 	@ the value in r1 is destroyed by this routine
 
 
@@ -65,15 +90,15 @@ exit:
 
 print_string:
 
-	push    {r0,r2,r7,r10,lr}	@ Save r0,r2,r7,r10,lr on stack
+	push    {r0,r2,r7,r10,lr}	@ save r0,r2,r7,r10,lr on stack
 
-	mov	r2,#3			@ The wrong value of r2
-					@ Just so the code runs
-					@ Your code below will overwrite
+	mov	r2,#3			@ the wrong value of r2
+					@ just so the code runs
+					@ your code below will overwrite
 					@ with the proper version
 
 	@==========================================
-	@ Your code for part 3b goes here =\
+	@ your code for part 3b goes here =\
 	@                                  \/
 	@==========================================
 	
@@ -119,7 +144,7 @@ print_number:
 
 divide:
 	bl	divide_by_10	@ divide by 10
-	add	r8,r8,#0x30	@ Add 0x30 (which is a null char here) to the remainder of divide_by_10, which is stored in r8
+	add	r8,r8,#0x30	@ Add 0x30 to the remainder of divide_by_10, which is stored in r8
 	strb	r8,[r10],#-1	@ store to buffer, increment pointer
 	adds	r0,r7,#0	@ move quotient to r0, update status flag
 	bne	divide		@ if quotient not zero then loop
@@ -154,9 +179,13 @@ divide_by_10:
 .data
 message:	.string ": ECE471 is cool\n"
 
-inputprompt:	.string "Print how many lines?:\n"
-inputtemplate:	.string	"%d"
+/* More stuff for first SC attempt
+inputprompt:	.string "Print how many lines? 2 digits please:\n"
 inputvalue:	.word 0
+
+outputtemplate:	.string	"Printing %d lines\n"
+*/
 
 @ BSS
 .lcomm buffer,11
+.lcomm inputbuffer,10
