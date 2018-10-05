@@ -1,0 +1,39 @@
+ECE 471 Fall 2018 -- Homework 4
+
+Name: Forest LeBlanc
+
+
+What you did for something cool (if applicable):
+	I just made the LED toggle on and off with each press of the button. Originally I planned to do some kind of RTTTL/MIDI thing but quickly decided that would be too complicated and gave up.	
+	It occurs to me as I write this that the pushbutton I used is hardware debounced and so I didn't bother with software debouncing. If I were stuck with a single wire or a crappier button, that would have been a good idea.
+
+Answers to Question #5:
+
+a.	usleep() is fairly accurate and will not be optimized out by the compiler, like some busy loops would be.
+
+b.	An OS provides abstraction, reducing complexity associated with the task and allowing it to be performed in more or less the same way across multiple machines running the same OS. 
+ 
+c.	The OS will generally have a set of permissions that will make accessing GPIO more involved -- this is, of course, a good thing if people without permission have access to the device. 
+
+d.	Absolutely not, and I think Microsoft is slimy to claim otherwise. Importantly, this is a matter of principle rather than semantics. Sure, a web browser can actually be ingrained into the OS. But should it? No. 	
+
+Answers to Question #6:
+
+a. Machine type: RasPi 3B R1.2
+
+[    0.000000] OF: fdt: Machine model: Raspberry Pi 3 Model B Rev 1.2
+
+b. Kernel version: 4.14.50-v7+
+
+Linux raspberrypi 4.14.50-v7+ #1122 SMP Tue Jun 19 12:26:26 BST 2018 armv7l GNU/Linux
+	
+
+c. Free Disk space: 9.7GiB
+/dev/root        15G  4.3G  9.7G  31% /
+
+d.
+  -h, --human-readable  print sizes in powers of 1024 (e.g., 1023M)
+
+
+
+
