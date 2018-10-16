@@ -1,0 +1,38 @@
+ECE471 HW5 -- Fall 2018
+
+Name: Forest LeBlanc
+
+7. 	Describe what your "something cool" code does.
+
+I'm just using the GPIO button routine from the last homework so that every time the button is pressed, a counter increments and is displayed on the i2c display. I made the choice to keep it simple and reset the count after 9 instead of having to write to multiple columns at once. 
+
+8.
+ a). What part of the Raspberry Pi (hardware) is in charge of the initial 
+boot process? Is this normal for an ARM board?
+
+The GPU starts the boot process by loading the first stage from ROM. 
+This reads the bootcode from the FAT partition on the SD card into the L2 cache, which is RTOS( realtime OS) "ThreadX". Then it enables SDRAM and loads start.elf
+This is fairly unusual -- most ARM devices run the first-stage bootloader (e.g. MLO) and then second-stage (uboot). 
+
+
+ b). Why is the /boot partition on the Pi a FAT32 filesystem? 
+
+FAT32 is simple, portable, not resource-intensive, technically free of patents and has a lot of documentation/support available. 
+
+ c). What is the generic name for the code/program responsible for loading the operating system
+kernel into memory and running it?
+
+start.elf loads and runs kernel.img. 
+
+ d). In the i2cdetect output in part 2c you can see that addresses 0-2 and 
+0x78-0x7f are not scanned. Why are these addressess skipped?
+
+These addressess are reserved for different purposes (i.e. 1 is the start byte, 0 is general call address, and others are for future purposes or different bus formats).  
+
+9.
+ a). (wc -l display_cool.c; wc -l display_final.c) >> README
+161 display_cool.c
+104 display_final.c
+
+ b). diff -u display_test.c display_final.c | wc -l
+70
