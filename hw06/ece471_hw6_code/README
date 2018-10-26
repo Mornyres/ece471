@@ -1,0 +1,30 @@
+ECE471 HW#6 -- Fall 2018
+
+Name:	Forest LeBlanc
+
+
+5.	Describe what your "something cool" code does
+	Basically the same as the last HW -- I display a counter over the i2c display which may be incremented using a pushbutton.
+
+6.
+ a).	No. The full protocol supports multiple master and slave devices whereas mine allows only one of each.
+
+ b).	Out of habit, I did a fair amount of extra error handling. However, there are so many opportunities for errors to occur that I highly doubt I covered them all. 
+For example, I could see a situation where a semaphore/mutex excludes resources desired by this program (SDA, SCL file desc., etc.) and causes an open() call to fail, whichcurrently makes everything else fail instead of doing some kind of delay until the resource is available.
+ 
+7.
+ a).	This would be a hard-RT task. By no means should something as important as brakes -- possibly the most important safety feature in a car -- be preempted by any process. 
+
+ b).	I would call this a soft-RT task -- the tune function in radios is by no means relied upon heavily by audiophiles or expected to work flawlessly. Faults are fairly tolerable.
+
+ c).	I would call this a firm-RT task -- it can miss some deadlines with little negative effect, but if it misses too many the customer would notice degradation in video quality and be very upset.
+
+8.
+ a). My Pi has been on for quite some time, so I have a lot to choose from...
+
+ 24:         19          0          0          0  ARMCTRL-level   2 Edge      VCHIQ doorbell
+
+As I understand it this is the Video Core Host Interface Queue driver's "doorbell" to the "mailbox" interface which is a memory pool shared with the GPU firmware. The "doorbell" is used by VCHIQ or the GPU firmware to alert the other of an available message.
+
+ 
+b). This would be useful for use with a package manager or other bash script that constantly asks you (y|n) questions. I know pacman for instance has a command line option that does this. Should be used with caution and with knowledge of what may go wrong.
