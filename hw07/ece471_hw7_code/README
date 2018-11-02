@@ -1,0 +1,21 @@
+ECE471 Fall 2018 -- HW7
+
+Name:	Forest LeBlanc
+
+4. Describe your something cool:
+I display the average of temperature over the past 20 readings. I was attempting a more advanced averaging function but ran out of time.
+
+
+
+5. a.	i2c is standardized, so there's no uncertainty in compatibility of different i2c devices.
+   b.	SPI can be used in full duplex such that one line can be used both to transmit and receive.
+   c.	No, because SPI can only work reliably over a short distance, like a few feet at most.
+   d.	The highest possible frequency of the GPIO interface is probably not high enough to keep up with the 10kHz requirement. Even if it was, there's too much uncertainty with switching frequency to be comfortable relying on GPIO. 
+
+
+
+6. a.	This just "throws away" the piped input, which may be useful for a shell script to suppress output or something.	
+   b.	This is the "always full" device and will always return ENOSPC (no space left on device). This is useful if troubleshooting the response of a program to disk full error.
+   c.	This may be useful  for file operations, so as many zeroes as desired can be received into a buffer. Again, useful for shell scripts where one wouldn't want to type out each 0.
+   d.	/dev/random allows access to device drivers and other resources to generate noise for random number generation. 
+
