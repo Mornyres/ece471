@@ -1,0 +1,20 @@
+ECE471 Fall 2018 -- HW8
+
+Name:	Forest LeBlanc
+
+
+3. Describe your something cool:
+My SC just does the 'easy' option and displays temperature in different units. 
+
+4. a.	Parasite power is the act of deriving power directly from the data line.Clearly this is useful for low power embedded serial communication. To enable this, the master device must enable a strong pullup on the 1-Wire bus -- according to the data sheet this means the Vdd pin must be tied to ground.
+
+   b.	1-wire would be preferable because it functions most reliably at long range of the given options.
+
+
+5. a.	Out of curiosity I did this with a function -- it can be called by
+`. ./sample.sh && myString `
+
+
+
+
+
