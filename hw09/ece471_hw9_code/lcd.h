@@ -57,8 +57,12 @@ int tempDisplay(double tempInput) {
 	int tempOnes = (((int)tempInput % 100) % 10);
 	tempOnes=abs(tempOnes);
 
-	int tempTenths = (int)((tempInput - (int)tempInput) * 10);
+	double remainder = tempInput - (int)tempInput;
+
+	// add 0.1 just because casting to int will take the floor (2 may be encoded as 1.9999... where casting makes it 1)
+	int tempTenths = (int)(( remainder * 10.0) + 0.1);
 	tempTenths=abs(tempTenths);
+
 
 	// if -99.9 to 99.9
 	if (tempHundreds == 0){
