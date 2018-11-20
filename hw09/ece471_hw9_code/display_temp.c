@@ -34,6 +34,7 @@ int main(int argc, char **argv) {
 	}
 	
 
+	// main loop begin
 	while(1) {
 
 		// only poll sensor if manual value not set
@@ -59,15 +60,15 @@ int main(int argc, char **argv) {
 			ErrorHandler(__FILE__, __LINE__);
 		}
 		
+		// valid temp reading
 		else{
 			tempK= tempC + 273.15; // kelvin
 			tempF = (tempC * (9.0/5.0) ) + 32.0; //fahrenheit
 
-			printf("%.2lfC\r\n",tempC); // printing to console just for debug
-			printf("%.2lfK\r\n",tempK);
-			printf("%.2lfF\r\n",tempF);
-
-			printf(" -------------------\r\n");
+			printf("-------------\r\n");
+			printf("%.4lfC\r\n",tempC); // printing to console just for debug
+			printf("%.4lfK\r\n",tempK);
+			printf("%.4lfF\r\n",tempF);
 
 			tempDisplay(tempC);
 
