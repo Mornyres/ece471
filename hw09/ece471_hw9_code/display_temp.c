@@ -12,6 +12,7 @@
 // setting errorcode to max neg. double value as defined in float.h
 #define ERRORCODE -DBL_MAX
 
+// preprocessor defined constants __FILE__, __LINE__ used here
 void ErrorHandler(char* file, int line);
 
 static double read_temp(char* filename);
@@ -82,8 +83,6 @@ int main(int argc, char **argv) {
 static double read_temp(char *filename) {
 
 	double result=0.0;
-
-	/* Your code here */
 	
 	int i,j=0;
 	int size;

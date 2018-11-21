@@ -79,11 +79,12 @@ int tempDisplay(double tempInput) {
 			}
 
 			//second = 1s
+			// ORing with decimal bit(0x80) to attach decimal to ones place
 			display_buffer[1]=num_array[tempOnes] | DECIMAL;
 			// (decimal)
 			display_buffer[2]=num_array[tempTenths];
 		}
-		else{
+		else{ 	// lower than 0
 			// first = neg symb
 			display_buffer[0]=char_negsymb;
 			// second = 10s
@@ -108,7 +109,6 @@ int tempDisplay(double tempInput) {
 		exit(1);
 	}
 		
-
 	printf("DEBUG: \r\n"
 			"Hundreds --  %d \r\n"
 			"Tens -- %d \r\n"
@@ -120,7 +120,6 @@ int tempDisplay(double tempInput) {
 
 	unsigned char buffer[17];
 
-/* BEGIN SOMETHING COOL SETUP */
 	// enable GPIO17
 	int fd_gpio = open ("/sys/class/gpio/export", O_WRONLY);
 
@@ -149,30 +148,25 @@ int tempDisplay(double tempInput) {
 	}
         read (fd_gpio, gpiobuffer, 16);
         close (fd_gpio);
-/* END SOMETHING COOL SETUP */
 	
 	/* Open i2c device */
-// YOUR CODE HERE
 	if ((fd_i2c = open(i2c_device,O_RDWR)) == -1){
 		printf("Could not open device\r\n");
 		exit(5);
 	}
 	/* Set slave address */
-// YOUR CODE HERE
 	if ((result = ioctl(fd_i2c,I2C_SLAVE, 0x70)) < 0){
 		printf("Could not set slave address\r\n");
 		exit(6);
 	}
 	
 	/* Turn on oscillator */
-// YOUR CODE HERE
 	buffer[0]=(0x02<<4) | (0x01);
 	if ((result = write(fd_i2c, buffer, 1)) < 0){
 		printf("Could not enable oscillator\r\n");
 		exit(7);
 	}
 	/* Turn on Display, No Blink */
-// YOUR CODE HERE
 
 	buffer[0]=(0x8<<4)|(0x1);
 	if ((result = write(fd_i2c, buffer, 1)) < 0){
@@ -181,7 +175,6 @@ int tempDisplay(double tempInput) {
 	}
 
 	/* Set Brightness */
-// YOUR CODE HERE
 
 	buffer[0]=(0xe<<4)|(0x9); 		// Set brightness to 10/16 DC
 	if ((result = write(fd_i2c, buffer, 1)) < 0){
@@ -189,7 +182,6 @@ int tempDisplay(double tempInput) {
 		exit(9);
 	}
 	/* Write 1s to all Display Columns */
-// YOUR CODE HERE
 
 	int i;
 	buffer[0]=0x0;
@@ -201,9 +193,6 @@ int tempDisplay(double tempInput) {
 	
 	char numdisplay[16] = {0, 0, 0, 0, 0, 0, 0, char_0, 0, 0, 0, 0, 0, 0, 0, 0};
 		
-// YOUR CODE HERE
-
-	
 	/* Clear Screen */
 	for(i=0;i<16;i++) buffer[1+i]=0x00;
 	result = write(fd_i2c, buffer, 17);

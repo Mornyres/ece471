@@ -5,4 +5,4 @@ sudo i2cdetect -y -r 1
 sudo modprobe w1-gpio
 sudo modprobe w1-therm
 
-echo "Looks good... I hope?"
+echo "No errors?"

@@ -16,8 +16,9 @@ display_temp.o:	display_temp.c $(DEP)
 	$(CC) $(CFLAGS) -c display_temp.c -include $(DEP) 
 
 
+# changed to add files we created
 submit:	display_temp.c README Makefile
-	tar -czvf hw9_submit.tar.gz display_temp.c fakedate README Makefile
+	tar -czvf hw9_submit.tar.gz display_temp.c fakedate README Makefile $(DEP) 
 
 clean:	
 	rm -f *~ *.o display_temp display_final display_cool

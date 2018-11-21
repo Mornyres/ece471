@@ -1,13 +1,24 @@
 ECE471 HW9 -- Fall 2018
 
-Name:
+Name:	
+Nick Fortin,
+Forest LeBlanc,
+Quang Luong
+
+Note: executable may optionally be run as `./display_temp -T [value]` to force a value to print to the screen (ideally a float or int)
 
 4.
-  a.
-  b.
-5.
-  a.
-  b.
-  c.
+a.	The Therac-25 radiation therapy machine had a malfunction where it administered a lethal dose of radiation to patients. A commission investigated and decided that several bad coding practices were at fault. This included reused code from earlier machines, bad error handling and failure to handle race conditions.
 
+b.	It's good to always write well documented code because it allows other users to understand the function of the code, and allows you to come back and remember how the code works, without you having to interpret the code again.
+
+5.
+  a.	Set to PRECISELY 10:04pm, Nov 12, 1955. 
+	We had to do ls --full-time to see the year.
+
+  b.	touch outputs `invalid date format`.
+Any time after ~2038 will be invalid, because Unix-like systems store time as a 32b value (time_t) representing seconds passed since Jan. 1st 1970.
+[(2^31)-1] corresponds to 03:14:08 UTC on 19 January 2038.
+
+  c.	As demonstrated here, this can be spoofed to any desired timestamp. There's no guarantee it hasn't been tampered with.
 
