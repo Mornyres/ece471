@@ -72,7 +72,8 @@ def imageParse(parenturl,maxImg):
 
         # enumerate() allows access to index as well as item
     	for index, url in enumerate(urls):
-		filename = "pic" + str(index) + ".png"
+                print "Attempting to parse " + url
+		filename = "pics/pic" + str(index) + ".png"
 		with open(filename, 'wb') as f:
                         if 'http' not in url:
                             url = '{}{}'.format(parenturl,url)
@@ -121,7 +122,7 @@ if ver == 0x44:
         try:
             #proceed iff button pressed
             #GPIO.wait_for_edge(GPIO_BUTTON, GPIO.FALLING)  
-            raw_input("Press a button to start reading")
+            raw_input("Press a button to start reading\n")
 
             # turn on led
             GPIO.output(GPIO_LED, GPIO.HIGH)
@@ -159,7 +160,7 @@ if ver == 0x44:
             print standardRGB
             #proceed iff button NOT pressed
             #GPIO.wait_for_edge(GPIO_BUTTON, GPIO.RISING)  
-            raw_input("Press a button to finish reading")
+            raw_input("Press a button to finish reading\n")
 
             # turn off led
             GPIO.output(GPIO_LED, GPIO.LOW)
@@ -176,8 +177,8 @@ if ver == 0x44:
     print myUrl
 
     # get up to 5 images
-    #imageParse(myUrl, 5)
-    imageParse("https://en.wikipedia.org/wiki/File:Example.jpg",5)
+    #imageParse(myUrl, 20)
+    imageParse("https://itsalwayssunny.fandom.com/wiki/Charlie_Kelly",20)
 
 else: 
  print "Device not found\n"
