@@ -7,6 +7,7 @@ import RPi.GPIO as GPIO
 # img filename management
 import re
 
+# for parsing web pages
 from bs4 import BeautifulSoup
 
 GPIO_LED = 17
@@ -15,15 +16,18 @@ GPIO_BUTTON = 27
 MAXCOLORS = 6
 NUM_PICS = 6
 
-def urlMaker(service):
+# theoretical max value for raw data -- [ticks of int. clock] * [int clock period]
+MAX16=21*1024
+
+def urlMaker(colorList,service):
     if (service == 'G'):
         # example url:
         # https://artsexperiments.withgoogle.com/artpalette/colors/8e8c4c-b77646-51657c
  
         url = "https://artsexperiments.withgoogle.com/artpalette/colors/"
         for col in colorList:
-            url = url + col
-            url = url + "-"
+            url = url + (col)
+            url = url + ("-")
 
         # removes last char: last color should not have a dash
         url=url[:-1]
@@ -35,15 +39,16 @@ def urlMaker(service):
         url="https://labs.tineye.com/multicolr/#colors="
 
         for col in colorList:
-            url = url +(col)
+            url = url + (col)
             url = url +(",")
 
         # removes last char: last color should not have a comma
         url=url[:-1]
 
+        # multicolr allows adjustment of weights for each color but we won't bother -- instead evenly divide 100 by the num. of colors
         url=url+";weights="
         for col in colorList:
-            url = url + (100/len(colorList))
+            url = url + str(100/len(colorList))
             url = url + (",")
         
         # removes last char: last weight should not have a comma
@@ -63,13 +68,23 @@ def imageParse(parenturl,maxImg):
 
     	soup = BeautifulSoup(webpage.text, 'html.parser')
 
-        debugFile = open("debug.txt",'wb')
-        debugFile.write(webpage.text)
 
         # below works for most cases but not all
     	img_tags = soup.find_all('img')
     	urls = [img['src'] for img in img_tags]
+        
+        rawhtml =""
+        mydivs = soup.find_all("div",{"class":"multicolr-lab"})
+        for div in mydivs:
+            rawhtml = rawhtml+div    
 
+        rawhtml=mydivs
+
+        debugFile = open("debug.txt", 'wb')
+        debugFile.write(rawhtml)
+
+
+        # must also follow dividers
         
 
         # maxImg limit -- only take first maxImg urls
@@ -137,23 +152,33 @@ if ver == 0x44:
 
             data = bus.read_i2c_block_data(0x29, 0)
             
-            rawcolor = "Raw data: %s\n" % (data)
+            p_rawcolor = "Raw data: %s\n" % (data)
 
             clear = clear = data[1] << 8 | data[0]
-            red = data[3] << 8 | data[2]
-            red8 = red / 256
 
+            # for each color: 8bit RGB value approx. equal to color divided by clear channel value for ratio, multiplied by 255 for 8bit
+            # however some clear light is not accounted for by rgb channels so let's try just the sum of these 3
+            red = data[3] << 8 | data[2]
+            
             green = data[5] << 8 | data[4]
-            green8 = green / 256
 
             blue = data[7] << 8 | data[6]
-            blue8 = blue / 256
             
-            crgb16 = "16bit CRGB -- C: %s, R: %s, G: %s, B: %s\n" % (clear, red, green, blue)
-            rgb8 = "8bit RGB -- R: %s, G: %s, B: %s\n" % (red8, green8, blue8)
-            print crgb16
-            print rgb8
-            print rawcolor
+            blue8 = (float(blue)/float(red+blue+green)) * 255
+            blue8 = int(blue8)
+            
+            green8 = (float(green)/float(red+blue+green)) * 255
+            green8 = int(green8)
+            
+            red8 = (float(red)/float(red+blue+green)) * 255
+            red8 = int(red8)
+            
+            p_crgb16 = "16bit CRGB -- C: %s, R: %s, G: %s, B: %s\n" % (clear, red, green, blue)
+            p_rgb8 = "8bit RGB -- R: %s/255, G: %s/255, B: %s/255\n" % (red8, green8, blue8)
+            print p_crgb16
+            print p_rgb8
+            print p_rawcolor
+
 
             # cast rgb to 0xRRGGBB
             currentColor = (red8 << (4*4))
@@ -179,7 +204,8 @@ if ver == 0x44:
             GPIO.output(GPIO_LED, GPIO.LOW)
             break
 
-    myUrl=urlMaker(mode)
+    print "saved color list", colorList
+    myUrl=urlMaker(colorList,mode)
     print "\nConstructed URL: " + myUrl
 
     # get up to 6 images
