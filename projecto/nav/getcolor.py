@@ -13,6 +13,7 @@ GPIO_LED = 17
 GPIO_BUTTON = 27
 
 MAXCOLORS = 6
+NUM_PICS = 6
 
 def urlMaker(service):
     if (service == 'G'):
@@ -40,7 +41,7 @@ def urlMaker(service):
         # removes last char: last color should not have a comma
         url=url[:-1]
 
-        url.append(";weights=")
+        url=url+";weights="
         for col in colorList:
             url = url + (100/len(colorList))
             url = url + (",")
@@ -51,8 +52,8 @@ def urlMaker(service):
         url= url +(";")
 
     else:
-        url = "https://i.redd.it/6ipk5ua5ch611.png"
-
+        # unrecognized method, go to the land of cursed images
+        url = "https://www.reddit.com/r/cursedimages/"
     return url
 
 def imageParse(parenturl,maxImg):
@@ -61,10 +62,15 @@ def imageParse(parenturl,maxImg):
         webpage = requests.get(parenturl)
 
     	soup = BeautifulSoup(webpage.text, 'html.parser')
-    	img_tags = soup.find_all('img')
 
+        debugFile = open("debug.txt",'wb')
+        debugFile.write(webpage.text)
+
+        # below works for most cases but not all
+    	img_tags = soup.find_all('img')
     	urls = [img['src'] for img in img_tags]
 
+        
 
         # maxImg limit -- only take first maxImg urls
         if len(urls) > maxImg:
@@ -174,11 +180,11 @@ if ver == 0x44:
             break
 
     myUrl=urlMaker(mode)
-    print myUrl
+    print "\nConstructed URL: " + myUrl
 
-    # get up to 5 images
-    #imageParse(myUrl, 20)
-    imageParse("https://itsalwayssunny.fandom.com/wiki/Charlie_Kelly",20)
+    # get up to 6 images
+    if (imageParse(myUrl, NUM_PICS) != NUM_PICS):
+        print "Did not get requested picture count\n"
 
 else: 
  print "Device not found\n"
