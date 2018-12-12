@@ -1,14 +1,23 @@
 import smbus
 import time
-import requests
+
+# also needs ordered_dict in some cases
+from collections import OrderedDict
+#import requests
+
+#argv and encoding
 import sys
+
+# following https://pythonadventures.wordpress.com/tag/unicodeencodeerror/ for below.
+# unicode encoding problems.
+reload(sys)
+sys.setdefaultencoding("utf-8")
+
+# comes with Raspbian
 import RPi.GPIO as GPIO
 
-# img filename management
-import re
-
-# for parsing web pages
-from bs4 import BeautifulSoup
+from myfunctions import javaParse
+from myfunctions import urlMaker
 
 GPIO_LED = 17
 GPIO_BUTTON = 27
@@ -17,92 +26,9 @@ MAXCOLORS = 6
 NUM_PICS = 6
 
 # theoretical max value for raw data -- [ticks of int. clock] * [int clock period]
+# currently not used but may be useful at some point
 MAX16=21*1024
 
-def urlMaker(colorList,service):
-    if (service == 'G'):
-        # example url:
-        # https://artsexperiments.withgoogle.com/artpalette/colors/8e8c4c-b77646-51657c
- 
-        url = "https://artsexperiments.withgoogle.com/artpalette/colors/"
-        for col in colorList:
-            url = url + (col)
-            url = url + ("-")
-
-        # removes last char: last color should not have a dash
-        url=url[:-1]
-
- 
-    elif (service == 'M'):
-        # example url:
-        # https://labs.tineye.com/multicolr/#colors=fee1dc,6abbd3,cb6092;weights=33,34,33;
-        url="https://labs.tineye.com/multicolr/#colors="
-
-        for col in colorList:
-            url = url + (col)
-            url = url +(",")
-
-        # removes last char: last color should not have a comma
-        url=url[:-1]
-
-        # multicolr allows adjustment of weights for each color but we won't bother -- instead evenly divide 100 by the num. of colors
-        url=url+";weights="
-        for col in colorList:
-            url = url + str(100/len(colorList))
-            url = url + (",")
-        
-        # removes last char: last weight should not have a comma
-        url=url[:-1]
-
-        url= url +(";")
-
-    else:
-        # unrecognized method, go to the land of cursed images
-        url = "https://www.reddit.com/r/cursedimages/"
-    return url
-
-def imageParse(parenturl,maxImg):
-
-        # from ://stackoverflow.com/questions/18408307/how-to-extract-and-download-all-images-from-a-website-using-beautifulsoup
-        webpage = requests.get(parenturl)
-
-    	soup = BeautifulSoup(webpage.text, 'html.parser')
-
-
-        # below works for most cases but not all
-    	img_tags = soup.find_all('img')
-    	urls = [img['src'] for img in img_tags]
-        
-        rawhtml =""
-        mydivs = soup.find_all("div",{"class":"multicolr-lab"})
-        for div in mydivs:
-            rawhtml = rawhtml+div    
-
-        rawhtml=mydivs
-
-        debugFile = open("debug.txt", 'wb')
-        debugFile.write(rawhtml)
-
-
-        # must also follow dividers
-        
-
-        # maxImg limit -- only take first maxImg urls
-        if len(urls) > maxImg:
-            urls = urls[:maxImg]
-
-        # enumerate() allows access to index as well as item
-    	for index, url in enumerate(urls):
-                print "Attempting to parse " + url
-		filename = "pics/pic" + str(index) + ".png"
-		with open(filename, 'wb') as f:
-                        if 'http' not in url:
-                            url = '{}{}'.format(parenturl,url)
-			response = requests.get(url)
-        		f.write(response.content)
-                        print"File " + filename + " written"
-
-	return len(urls)
 
 # enter main loop
 mode = 'G'
@@ -209,7 +135,10 @@ if ver == 0x44:
     print "\nConstructed URL: " + myUrl
 
     # get up to 6 images
-    if (imageParse(myUrl, NUM_PICS) != NUM_PICS):
+
+    #below for debugging
+    myUrl = "https://artsexperiments.withgoogle.com/artpalette/colors/351e12-17913e-911b1b"
+    if (javaParse(myUrl, NUM_PICS) != NUM_PICS):
         print "Did not get requested picture count\n"
 
 else: 
