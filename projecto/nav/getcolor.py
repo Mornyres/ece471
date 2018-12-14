@@ -17,6 +17,7 @@ sys.setdefaultencoding("utf-8")
 import RPi.GPIO as GPIO
 
 from myfunctions import javaParse
+from myfunctions import imageParse
 from myfunctions import urlMaker
 
 GPIO_LED = 17
@@ -31,7 +32,9 @@ MAX16=21*1024
 
 
 # enter main loop
-mode = 'G'
+
+# as in None; for no special formatting
+mode = 'N'
 if (len(sys.argv) == 2):
     mode = sys.argv[1]
 
@@ -136,10 +139,23 @@ if ver == 0x44:
 
     # get up to 6 images
 
-    #below for debugging
-    myUrl = "https://artsexperiments.withgoogle.com/artpalette/colors/351e12-17913e-911b1b"
-    if (javaParse(myUrl, NUM_PICS) != NUM_PICS):
-        print "Did not get requested picture count\n"
+    
+    #if T for test throw it a softball
+    if (mode=='T'):
+        myUrl = "https://en.wikipedia.org/wiki/Impressionism"
+        #below: options for debugging
+        #myUrl = "https://artsexperiments.withgoogle.com/artpalette/colors/351e12-17913e-911b1b"
+
+
+
+    if ((mode == 'G') or (mode == 'M')):
+        #attempt to extract javascript response...
+        if (javaParse(myUrl, NUM_PICS) != NUM_PICS):
+            print "Did not get requested picture count\n"
+    else:
+        # non- JS version
+        if (imageParse(myUrl, NUM_PICS) != NUM_PICS):
+            print "Did not get requested picture count\n"
 
 else: 
  print "Device not found\n"
